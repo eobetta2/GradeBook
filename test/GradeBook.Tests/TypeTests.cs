@@ -7,6 +7,20 @@ namespace GradeBook.Tests
 
     {
         [Fact]
+        public void Test1() {
+            Book book = GetBook("Book 1");
+            SetName(book, "New Name");
+
+            Assert.Equal("New Name", book.Name);
+
+        }
+
+        private void SetName(Book book, string name)
+        {
+            book.Name = name; 
+        }
+
+        [Fact]
         public void GetBookHasDistinctReturns() {
             Book book = GetBook("Book 1");
             Book book2 = GetBook("Book 2");
