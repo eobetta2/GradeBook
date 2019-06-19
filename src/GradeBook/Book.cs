@@ -5,32 +5,12 @@ namespace GradeBook {
     
     public class Book {
        
-        public string Name;
+        public string name;
         private List<double> grades;
-        
+
         public Book(string name) {
             grades = new List<double>();
-            Name = name;
-        }
-
-        public void AddGrade(char letter){
-            switch(letter) {
-                case 'A':
-                    AddGrade(90);
-                    break;
-                
-                case 'B':
-                    AddGrade(90);
-                    break;
-                
-                case 'C':
-                    AddGrade(90);
-                    break;
-                
-                default:
-                    AddGrade(0);
-                    break;
-            }
+            this.name = name;
         }
 
         public void AddGrade(double grade) {

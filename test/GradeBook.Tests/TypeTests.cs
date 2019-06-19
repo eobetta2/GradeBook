@@ -42,7 +42,7 @@ namespace GradeBook.Tests
             Book book = GetBook("Book 1");
             GetBookSetName(out book, "New Name");
 
-            Assert.Equal("New Name", book.Name);
+            Assert.Equal("New Name", book.name);
 
         }
 
@@ -56,7 +56,7 @@ namespace GradeBook.Tests
             Book book = GetBook("Book 1");
             GetBookSetName(book, "New Name");
 
-            Assert.Equal("Book 1", book.Name);
+            Assert.Equal("Book 1", book.name);
 
         }
 
@@ -70,13 +70,13 @@ namespace GradeBook.Tests
             Book book = GetBook("Book 1");
             SetName(book, "New Name");
 
-            Assert.Equal("New Name", book.Name);
+            Assert.Equal("New Name", book.name);
 
         }
 
         private void SetName(Book book, string name)
         {
-            book.Name = name; 
+            book.name = name; 
         }
 
         [Fact]
@@ -84,8 +84,8 @@ namespace GradeBook.Tests
             Book book = GetBook("Book 1");
             Book book2 = GetBook("Book 2");
 
-            Assert.Equal("Book 1", book.Name);
-            Assert.Equal("Book 2", book2.Name);
+            Assert.Equal("Book 1", book.name);
+            Assert.Equal("Book 2", book2.name);
 
         }
 
