@@ -7,6 +7,20 @@ namespace GradeBook.Tests
 
     {
         [Fact]
+        public void StrignsBehaveLikeValTypes() {
+            string name = "Scott";
+            string upper = MakeUpperCase(name);
+
+            Assert.Equal("SCOTT", upper);
+            Assert.Equal("Scott", name);
+
+        }
+
+        private string MakeUpperCase(string paramter) {
+            return paramter.ToUpper();
+        }
+
+        [Fact]
         public void Test1() {
             var x = GetInt();
             SetInt(x);
