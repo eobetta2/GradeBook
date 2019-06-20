@@ -3,9 +3,34 @@ using Xunit;
 
 namespace GradeBook.Tests
 {
-    public class TypeTests
+    public delegate string WriteLogDelegate(string logMessage);
 
+    public class TypeTests
     {
+        [Fact]
+        public void WriteLogDelegateCanPointToMethod() {
+            WriteLogDelegate log;
+            
+            log  = new WriteLogDelegate(ReturnMessage);
+            var result = log("Hello");
+
+            Assert.Equal("Hello", result);
+        }
+
+        string ReturnMessage(string message) {
+            return message;
+        }
+
+        [Fact] 
+        public void ValueTypesAlsoPassByValue() {
+            int x = GetInt();
+            SetInt(ref x);
+        }
+
+        private void SetInt(ref int z) {
+            z = 42;
+        }
+
         [Fact]
         public void StrignsBehaveLikeValTypes() {
             string name = "Scott";
