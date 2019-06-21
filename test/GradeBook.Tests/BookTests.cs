@@ -10,7 +10,7 @@ namespace GradeBook.Tests
         public void BookCalculatesStats() {
 
             //arrange
-            Book book = new Book("");
+            InMemoryBook book = new InMemoryBook("");
             book.AddGrade(90.34);
             book.AddGrade(80.55);
             book.AddGrade(70.23);

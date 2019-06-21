@@ -1,21 +1,97 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GradeBook {
 
     public delegate void GradeAddedDelegate(object sender, EventArgs args);
-    
-    public class Book {
-       
-        public string name;
-        private List<double> grades;
 
-        public Book(string name) {
-            grades = new List<double>();
-            this.name = name;
+    public class NamedObject {
+        public NamedObject(string name) {
+            Name = name;
         }
 
-        public void AddGrade(double grade) {
+        public string Name {
+            get; 
+            set;
+        }
+
+    }
+
+    public interface Ibook {
+        void AddGrade(double grade);
+        Statistics GetStatistics();
+        string Name {get;}
+        event GradeAddedDelegate GradeAdded;
+
+    }
+
+    public abstract class Book : NamedObject, Ibook{
+        public Book(string name) : base(name){}
+
+        public abstract event GradeAddedDelegate GradeAdded;
+        public abstract void AddGrade(double grade);
+        public abstract Statistics GetStatistics();
+
+    }
+
+    public class DiskBook : Book
+    {
+        public DiskBook(string name) : base(name)
+        {
+        }
+
+        public override event GradeAddedDelegate GradeAdded;
+
+        public override void AddGrade(double grade)
+        {
+            if (grade >= 0 && grade <=100) {
+
+
+                using(var writer = File.AppendText($"{Name}.txt")) {
+                    writer.WriteLine(grade);
+                }
+                
+                if (GradeAdded != null) {
+                    GradeAdded(this, new EventArgs());
+                } 
+
+            } else {
+                throw new ArgumentException($"Invalid {nameof(grade)}");
+            }
+            
+        }
+
+        public override Statistics GetStatistics()
+        {
+            var result = new Statistics();
+
+            using (var reader = File.OpenText($"{Name}.txt")) {
+                var line = reader.ReadLine();
+
+                while (line != null) {
+                    var number = double.Parse(line);
+                    result.Add(number);
+                    line = reader.ReadLine();
+                }
+                    
+            }
+
+            return result;
+        }
+    }
+
+    public class InMemoryBook : Book {
+       
+        private List<double> grades;
+
+        public InMemoryBook(string name) : base(name) {
+            grades = new List<double>();
+            this.Name = name;
+
+        }
+
+        public override void AddGrade(double grade) {
             if (grade >= 0 && grade <=100) {
                 grades.Add(grade);
 
@@ -25,56 +101,28 @@ namespace GradeBook {
 
             } else {
                 throw new ArgumentException($"Invalid {nameof(grade)}");
-                System.Console.WriteLine("re-enter grade please...");
             }
 
         }
 
-        public event GradeAddedDelegate GradeAdded;
+        public override event GradeAddedDelegate GradeAdded;
 
-        public Statistics GetStatistics() {
+        public override Statistics GetStatistics() {
 
             Statistics result = new Statistics();
-            result.Average = 0.0;
-            result.Low = double.MaxValue;
-            result.High = double.MinValue;
             
             for (int i = 0; i < grades.Count; i++) {
 
-                if (grades[i] == 40.0) {
-                    continue;
-                }
-
-                result.High = Math.Max(grades[i], result.High);
-                result.Low = Math.Min(grades[i],result.Low);
-                result.Average += grades[i];
+                result.Add(grades[i]);
             }
 
-            result.Average /= grades.Count;
-
-            switch (result.Average) {
-                case var d when d >= 90.0:
-                    result.letter = 'A';
-                    break;
-
-                case var d when d >= 80.0:
-                    result.letter = 'B';
-                    break;
-
-                case var d when d >= 70.0:
-                    result.letter = 'C';
-                    break;
-
-                 case var d when d >= 60.0:
-                    result.letter = 'D';
-                    break;
-
-                 default:
-                    result.letter = 'F';
-                    break;              
-            }
             return result;
 
+        }
+
+        public static implicit operator InMemoryBook(DiskBook v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

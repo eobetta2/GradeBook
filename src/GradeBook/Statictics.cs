@@ -5,5 +5,11 @@ namespace GradeBook {
         public double Low;
         public char letter;
 
+        public Statistics()
+        {
+            Average = 0.0;
+            Low = double.MaxValue;
+            High = double.MinValue;
+        }
     }
 }
